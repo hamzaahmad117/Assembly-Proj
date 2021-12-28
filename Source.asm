@@ -334,14 +334,39 @@ FIBTEST ENDP
 
 
 MCQTEST PROC
+.data
+
+;answer byte ?
+.code
 
 
 
+
+mWrite<'Choose an appropriate word from the options to suitably fill the blank in the sentence below so that the sentence makes sense, both grammatically and contextually.',0dh,0ah>
+mov eax, 1
+call MCQs
+mov ebx, eax
+
+call readchar
+
+
+;and al, 11011111b
+cmp al, bl
+jne wrong
+mWrite<'Correct!',0dh, 0ah>
+jmp next
+
+wrong:
+mWrite<'Wrong!',0dh, 0ah>
+
+
+next:
 ret 
 MCQTEST ENDP
 
 
 MCQs PROC
+
 cmp eax, 1
 je q1
 cmp eax, 2
@@ -365,6 +390,20 @@ je q10
 
 q1:
 
+; printing the question
+
+mWrite<'Our country is spiritual country, theirs . . . . . . religious.', 0dh, 0ah>
+mWrite<'A. is', 0dh, 0ah>
+mWrite<'B. are', 0dh, 0ah>
+mWrite<'C. also',0dh, 0ah>
+mWrite<'D. have',0dh,0ah>
+
+
+; mov the answer option in eax
+mov eax, 'a'
+
+jmp MCQEND
+
 q2:
 
 q3:
@@ -385,7 +424,7 @@ q10:
 
 
 
-
+MCQEND:
 
 ret
 MCQs ENDp
