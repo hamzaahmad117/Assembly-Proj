@@ -6,178 +6,307 @@ answer_max_length = 80
 answer byte answer_max_length dup(?)
 answerlength byte ?
 score byte 0
-randomArray byte 15 dup(0)
+randomArray byte 40 dup(0)
 
 .code
+MCQs PROC
 
-randomArrayGenerator PROC
+cmp eax, 1
+je q1
+cmp eax, 2
+je q2
+cmp eax, 3
+je q3
+cmp eax, 4
+je q4
+cmp eax, 5
+je q5
+cmp eax, 6
+je q6
+cmp eax, 7
+je q7
+cmp eax, 8
+je q8
+cmp eax, 9
+je q9
+cmp eax, 10
+je q10
+cmp eax, 11
+je q11
+cmp eax, 12
+je q12
+cmp eax, 13
+je q13
+cmp eax, 14
+je q14
+cmp eax, 15
+je q15
+cmp eax, 16
+je q16
+cmp eax, 17
+je q17
+cmp eax, 18
+je q18
+cmp eax, 19
+je q19
+cmp eax, 20
+je q20
+cmp eax, 21
+je q21
+cmp eax, 22
+je q22
+cmp eax, 23
+je q23
+cmp eax, 24
+je q24
 
-.data
-count byte 0
 
-.code
-push ecx
-push eax
-push ebx
-push esi
+q1:
+; printing the question
 
-mov ecx, 15
-mov ebx, 0
-mov eax, 0
-mov esi, edx
+mWrite<'Our country is spiritual country, theirs . . . . . . religious.', 0dh, 0ah>
+mWrite<'A. is', 0dh, 0ah>
+mWrite<'B. are', 0dh, 0ah>
+mWrite<'C. also',0dh, 0ah>
+mWrite<'D. have',0dh,0ah>
 
-l1:
-	inc ebx
-	push ecx
-	push edx
-	
-	do:
-		mov count, 0
-		mov eax, 30
-		call Randomize
-		call RandomRange
-		add eax, 1
-		mov ecx, ebx
-		mov edx, esi
-		l2:
-		cmp al, [edx]
-		jne finish
-		add count, 1
-		
 
-		
-		finish:
-		inc edx
-		loop l2
-		
-	cmp count, 0
-	jne do
-	
-	pop edx
-	mov [edx],al
-	pop ecx
-	inc edx
-loop l1
+; mov the answer option in eax
+mov eax, 'A'
 
-pop esi
-pop ebx
-pop eax
-pop ecx
+jmp MCQEND
+
+q2:
+mWrite<'... he does is up to him', 0dh, 0ah>
+mWrite<'A. how', 0dh, 0ah>
+mWrite<'B. why', 0dh, 0ah>
+mWrite<'C. what',0dh, 0ah>
+mWrite<'D. which',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+
+q3:
+mWrite<'The news ... the general has been captured is true', 0dh, 0ah>
+mWrite<'A. that ', 0dh, 0ah>
+mWrite<'B. how ', 0dh, 0ah>
+mWrite<'C. what ',0dh, 0ah>
+mWrite<'D. which ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+q4:
+mWrite<'Could you talk ...', 0dh, 0ah>
+mWrite<'A. quitelier ', 0dh, 0ah>
+mWrite<'B. more quietly', 0dh, 0ah>
+mWrite<'C. quitely',0dh, 0ah>
+mWrite<'D. none',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+q5:
+mWrite<'Can you drive any ...', 0dh, 0ah>
+mWrite<'A. fast ', 0dh, 0ah>
+mWrite<'B. fastest ', 0dh, 0ah>
+mWrite<'C. faster ',0dh, 0ah>
+mWrite<'D. none ',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+q6:
+mWrite<'Your accent is the ... in class', 0dh, 0ah>
+mWrite<'A. worst ', 0dh, 0ah>
+mWrite<'B. worse ', 0dh, 0ah>
+mWrite<'C. worster',0dh, 0ah>
+mWrite<'D. worsetest',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+q7:
+mWrite<'Find out from ... when she will be back', 0dh, 0ah>
+mWrite<'A. her', 0dh, 0ah>
+mWrite<'B. she', 0dh, 0ah>
+mWrite<'C. hers',0dh, 0ah>
+mWrite<'D. herself',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+q8:
+mWrite<'If you can not find your book, you can borrow...', 0dh, 0ah>
+mWrite<'A. mine ', 0dh, 0ah>
+mWrite<'B. me ', 0dh, 0ah>
+mWrite<'C. myself ',0dh, 0ah>
+mWrite<'D. my ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+q9:
+mWrite<'The little boy tied his shoelaces...', 0dh, 0ah>
+mWrite<'A. himself', 0dh, 0ah>
+mWrite<'B. him ', 0dh, 0ah>
+mWrite<'C. his',0dh, 0ah>
+mWrite<'D. he',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+q10:
+mWrite<' Could you turn ... the TV? The soap opera is about to start.', 0dh, 0ah>
+mWrite<'A. on', 0dh, 0ah>
+mWrite<'B. off', 0dh, 0ah>
+mWrite<'C. out',0dh, 0ah>
+mWrite<'D. back',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+
+q11:
+mWrite<'There was nothing good on TV so I turned it ... and went to bed.', 0dh, 0ah>
+mWrite<'A. in ', 0dh, 0ah>
+mWrite<'B. up ', 0dh, 0ah>
+mWrite<'C. off ',0dh, 0ah>
+mWrite<'D. down ',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+
+
+
+
+q12:
+mWrite<' I´ve been looking ... my car keys for half an hour. Have you seen them anywhere?', 0dh, 0ah>
+mWrite<'A. at ', 0dh, 0ah>
+mWrite<'B. up', 0dh, 0ah>
+mWrite<'C. for ',0dh, 0ah>
+mWrite<'D. after ',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+
+
+
+
+q13:
+mWrite<'What is the adverb in the sentence? Peter neatly wrote a shopping list.', 0dh, 0ah>
+mWrite<'A. neatly', 0dh, 0ah>
+mWrite<'B. wrote ', 0dh, 0ah>
+mWrite<'C. shopping',0dh, 0ah>
+mWrite<'D. list ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+
+
+q14:
+mWrite<'What is the adverb in the sentence? The students nervously did their test.', 0dh, 0ah>
+mWrite<'A. students', 0dh, 0ah>
+mWrite<'B. nervously ', 0dh, 0ah>
+mWrite<'C. their ',0dh, 0ah>
+mWrite<'D. test ',0dh,0ah>
+mov eax, 'B'
+jmp MCQEND
+
+
+
+
+q15:
+mWrite<'Which adverb best completes the sentence? She ... put the baby on the bed.', 0dh, 0ah>
+mWrite<'A. quick ', 0dh, 0ah>
+mWrite<'B. happyful ', 0dh, 0ah>
+mWrite<'C. carefully ',0dh, 0ah>
+mWrite<'D. did ',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+
+
+
+q16:
+mWrite<'The local team scored three goals ... the first half of the match.', 0dh, 0ah>
+mWrite<'A. at ', 0dh, 0ah>
+mWrite<'B. for', 0dh, 0ah>
+mWrite<'C. in ',0dh, 0ah>
+mWrite<'D. on ',0dh,0ah>
+mov eax, 'C'
+jmp MCQEND
+
+
+
+q17:
+mWrite<'The island is so small that there are only five houses ... it.', 0dh, 0ah>
+mWrite<'A. on ', 0dh, 0ah>
+mWrite<'B. in ', 0dh, 0ah>
+mWrite<'C. over ',0dh, 0ah>
+mWrite<'D. out ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+
+
+
+q18:
+mWrite<'Many species of insects were wiped ... when the jungle was cleared', 0dh, 0ah>
+mWrite<'A. of', 0dh, 0ah>
+mWrite<'B. away ', 0dh, 0ah>
+mWrite<'C. off ',0dh, 0ah>
+mWrite<'D. out ',0dh,0ah>
+mov eax, 'D'
+jmp MCQEND
+
+
+q19:
+mWrite<'..., you have get a chance, you might as well make full use of it.', 0dh, 0ah>
+mWrite<'A. As soon as', 0dh, 0ah>
+mWrite<'B. Now that ', 0dh, 0ah>
+mWrite<'C. Although ',0dh, 0ah>
+mWrite<'D. After ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+
+
+
+q20:
+mWrite<'She has not spoken to us ... we had the argument.', 0dh, 0ah>
+mWrite<'A. since ', 0dh, 0ah>
+mWrite<'B. while ', 0dh, 0ah>
+mWrite<'C. so ',0dh, 0ah>
+mWrite<'D. as ',0dh,0ah>
+mov eax, 'A'
+jmp MCQEND
+
+
+q21:
+mWrite<'... you refuse to pay the ransom, the kidnappers might hurt the child', 0dh, 0ah>
+mWrite<'A. Or ', 0dh, 0ah>
+mWrite<'B. If ', 0dh, 0ah>
+mWrite<'C. Lest',0dh, 0ah>
+mWrite<'D. Unless',0dh,0ah>
+mov eax, 'B'
+jmp MCQEND
+
+
+q22:
+mWrite<"...!Now don't show me your face again.", 0dh, 0ah>
+mWrite<'A. Hark ', 0dh, 0ah>
+mWrite<'B. Sorry ', 0dh, 0ah>
+mWrite<'C. Listen',0dh, 0ah>
+mWrite<'D. Out ',0dh,0ah>
+mov eax, 'D'
+jmp MCQEND
+
+
+q23:
+mWrite<'...!my lord, I feel honoured to welcome you to my humble abode.', 0dh, 0ah>
+mWrite<'A. Hey', 0dh, 0ah>
+mWrite<'B. Hail', 0dh, 0ah>
+mWrite<'C. Ahoy',0dh, 0ah>
+mWrite<'D. Adieu',0dh,0ah>
+mov eax, 'B'
+jmp MCQEND
+
+q24:
+mWrite<'...!Let me see if I can get something to pull it out.', 0dh, 0ah>
+mWrite<'A. Ha', 0dh, 0ah>
+mWrite<'B. O', 0dh, 0ah>
+mWrite<'C. Hey',0dh, 0ah>
+mWrite<'D. Hold on',0dh,0ah>
+mov eax, 'D'
+jmp MCQEND
+
+MCQEND:
+
 ret
-randomArrayGenerator ENDP
-
-saveScore PROC
-.data
-buffer BYTE 'Score: ',0,0,0dh,0ah
-bufSize DWORD ($-buffer)
-errMsg BYTE "Cannot open file",0dh,0ah,0
-filename     BYTE 50 dup (?)
-fileHandle   HANDLE ?			; handle to output file
-bytesWritten DWORD ?    			; number of bytes written
-
-.code
-mWrite <0dh,0ah,'-->> Please enter your name: '>
-mov edx, offset filename
-mov ecx, 50 ; maximum str length
-call readstring
-
-mov filename[eax], '.'
-mov filename[eax + 1], 't'
-mov filename[eax + 2], 'x'
-mov filename[eax + 3], 't'
-mov filename[eax + 4], 0
-
-
-cmp ebx, 10
-je append10
-add bl, 48
-mov buffer[8], bl
-jmp appendnum
-
-
-append10:
-mov buffer[8], 49
-mov buffer[9], 48
-
-
-
-
-appendnum:
-	INVOKE CreateFile,
-	  ADDR filename, GENERIC_WRITE, DO_NOT_SHARE, NULL,
-	  OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
-
-	mov fileHandle,eax			; save file handle
-	.IF eax == INVALID_HANDLE_VALUE
-	  mov  edx,OFFSET errMsg		; Display error message
-	  call WriteString
-	  jmp  QuitNow
-	.ENDIF
-
-	; Move the file pointer to the end of the file
-	INVOKE SetFilePointer,
-	  fileHandle,0,0,FILE_END
-
-	; Append text to the file
-	INVOKE WriteFile,
-	    fileHandle, ADDR buffer, bufSize,
-	    ADDR bytesWritten, 0
-
-	INVOKE CloseHandle, fileHandle
-
-QuitNow:
-
-ret
-saveScore ENDP
-
-main PROC
-
-
-
-start:
-call clear_screen
-mWrite<'-->> Which questions do you want to practice?',0dh,0ah>
-mWrite<'1. Fill in the blanks.',0dh,0ah>
-mWrite<'2. Multiple Choice Questions.',0dh,0ah>
-
-call readint
-
-.if al == 1
-call FIBTEST
-.else
-call MCQTEST
-.endif
-
-
-
-
-
-quit:
-mWrite<"Your Score: ">
-movzx eax, score
-call writeint
-
-mov ebx, 0
-mov bl, score
-call saveScore
-
-mWrite<0dh,0ah,"Play Again? (Y/N): ">
-call readchar
-
-.if al == 'y' || al == 'Y'
-jmp start
-
-.endif
-
-;movzx ebx, score
-;call scoreSave
-
-exit
-main ENDP
-
-
-; returns the answer of the blank in the variable whose offset was stored in edx
-; question no. to be moved in eax
+MCQs ENDp
 
 FIB PROC
 .data
@@ -561,13 +690,185 @@ ret
 FIB ENDP
 
 
+; ---------------------------------------------------------------------------------;
+; mov offset of the randomArray in edx
+; mov range in ebx
+; generates unique random numbers in (1 - range)
+;----------------------------------------------------------------------------------;
+randomArrayGenerator PROC
+
+.data
+count byte 0
+range dword 0
+
+.code
+push ecx
+push eax
+push esi
+
+mov range, ebx
+mov ecx, 15
+mov ebx, 0
+mov eax, 0
+mov esi, edx
+
+l1:
+	inc ebx
+	push ecx
+	push edx
+	
+	do:
+		mov count, 0
+		mov eax, range
+		call Randomize
+		call RandomRange
+		add eax, 1
+		mov ecx, ebx
+		mov edx, esi
+		l2:
+		cmp al, [edx]
+		jne finish
+		add count, 1
+		
+
+		
+		finish:
+		inc edx
+		loop l2
+		
+	cmp count, 0
+	jne do
+	
+	pop edx
+	mov [edx],al
+	pop ecx
+	inc edx
+loop l1
+
+pop esi
+pop eax
+pop ecx
+ret
+randomArrayGenerator ENDP
+
+saveScore PROC
+.data
+buffer BYTE 'Score: ',0,0,0dh,0ah
+bufSize DWORD ($-buffer)
+errMsg BYTE "Cannot open file",0dh,0ah,0
+filename     BYTE 50 dup (?)
+fileHandle   HANDLE ?			; handle to output file
+bytesWritten DWORD ?    			; number of bytes written
+
+.code
+mWrite <0dh,0ah,'-->> Please enter your name: '>
+mov edx, offset filename
+mov ecx, 50 ; maximum str length
+call readstring
+
+mov filename[eax], '.'
+mov filename[eax + 1], 't'
+mov filename[eax + 2], 'x'
+mov filename[eax + 3], 't'
+mov filename[eax + 4], 0
+
+
+cmp ebx, 10
+je append10
+add bl, 48
+mov buffer[8], bl
+jmp appendnum
+
+
+append10:
+mov buffer[8], 49
+mov buffer[9], 48
+
+
+appendnum:
+	INVOKE CreateFile,
+	  ADDR filename, GENERIC_WRITE, DO_NOT_SHARE, NULL,
+	  OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
+
+	mov fileHandle,eax			; save file handle
+	.IF eax == INVALID_HANDLE_VALUE
+	  mov  edx,OFFSET errMsg		; Display error message
+	  call WriteString
+	  jmp  QuitNow
+	.ENDIF
+
+	; Move the file pointer to the end of the file
+	INVOKE SetFilePointer,
+	  fileHandle,0,0,FILE_END
+
+	; Append text to the file
+	INVOKE WriteFile,
+	    fileHandle, ADDR buffer, bufSize,
+	    ADDR bytesWritten, 0
+
+	INVOKE CloseHandle, fileHandle
+
+QuitNow:
+
+ret
+saveScore ENDP
+
+main PROC
+
+
+
+start:
+call clear_screen
+mWrite<'-->> Which questions do you want to practice?',0dh,0ah>
+mWrite<'1. Fill in the blanks.',0dh,0ah>
+mWrite<'2. Multiple Choice Questions.',0dh,0ah>
+mWrite<'3. View Scores.',0dh,0ah>
+mWrite<'4. Quit Game.',0dh, 0ah>
+mWrite<'Your Choice: '>
+call readint
+
+.if al == 1
+call FIBTEST
+.elseif al == 2
+call MCQTEST
+.else
+jmp closeProgram
+.endif
+
+quit:
+mWrite<"Your Score: ">
+movzx eax, score
+call writeint
+
+mov ebx, 0
+mov bl, score
+call saveScore
+
+mWrite<0dh,0ah,"Play Again? (Y/N): ">
+call readchar
+
+.if al == 'y' || al == 'Y'
+jmp start
+
+.endif
+
+
+closeProgram:
+exit
+main ENDP
+
 FIBTEST PROC
+push edx
+push ebx
+push ecx
+push eax
+push esi
+
+
 call clear_screen
 mov edx, offset randomArray
+mov ebx, 40
 call randomArrayGenerator
-
-
-
 
 mov score,0
 mov ecx, 10
@@ -605,13 +906,24 @@ cmp eax, 1
 jne wrong
 
 inc score
+mov eax, green + (black * 16)
+call settextcolor
 mWrite<"Correct!",0dh,0ah>
+mov eax, white + (black * 16)
+call settextcolor
 call readchar
 jmp next
 
 
 wrong:
+mov eax, red + (black * 16)
+call settextcolor
 mwrite<"Wrong!", 0dh, 0ah>
+mov eax, white + (black * 16)
+call settextcolor
+mWrite<'Correct Answer: '>
+mov edx, edi
+call writestring
 call readchar
 
 next:
@@ -628,348 +940,85 @@ dec ecx
 cmp ecx, 0
 jne questioning
 
+
+pop esi
+pop eax
+pop ecx
+pop ebx
+pop edx
+
 ret
 FIBTEST ENDP
 
 
-
 MCQTEST PROC
-.data
+push edx
+push ebx
+push ecx
+push eax
+call clear_screen
 
-;answer byte ?
-.code
+mov edx, offset randomArray
+mov ebx, 24
+call randomArraygenerator
 
 
+mov score,0
+mov ecx, 10
+mov ebx, 0
+mov eax, 0
+
+mov esi, offset randomArray
 
 
-mWrite<'Choose an appropriate word from the options to suitably fill the blank in the sentence below so that the sentence makes sense, both grammatically and contextually.',0dh,0ah>
-mov eax, 1
+quiz:
+mWrite<'-->> Choose an appropriate word from the options to suitably fill the blank in the sentence below',0dh,0ah,'    so that the sentence makes sense, both grammatically and contextually.',0dh,0ah,0dh, 0ah>
+mov al, [esi]
+movzx eax, al
 call MCQs
 mov ebx, eax
 
 call readchar
 
-
-;and al, 11011111b
+and al, 11011111b
 cmp al, bl
 jne wrong
+mov eax, green + (black * 16)
+call settextcolor
 mWrite<'Correct!',0dh, 0ah>
+call readint
+mov eax, white + (black * 16)
+call settextcolor
+inc score
 jmp next
 
 wrong:
+mov eax, red + (black * 16)
+call settextcolor
 mWrite<'Wrong!',0dh, 0ah>
+mWrite<'The correct option was '>
+mov eax, ebx
+call writechar
+mWrite<'.',0dh, 0ah>
+mov eax, white + (black * 16)
+call settextcolor
+call readint
+
 
 
 next:
+call clear_screen
+inc esi
+dec ecx
+cmp ecx, 0
+jne quiz
+
+pop eax
+pop ecx
+pop ebx
+pop edx
 ret 
 MCQTEST ENDP
-
-
-MCQs PROC
-
-cmp eax, 1
-je q1
-cmp eax, 2
-je q2
-cmp eax, 3
-je q3
-cmp eax, 4
-je q4
-cmp eax, 5
-je q5
-cmp eax, 6
-je q6
-cmp eax, 7
-je q7
-cmp eax, 8
-je q8
-cmp eax, 9
-je q9
-cmp eax, 10
-je q10
-cmp eax, 11
-je q11
-cmp eax, 12
-je q12
-cmp eax, 13
-je q13
-cmp eax, 14
-je q14
-cmp eax, 15
-je q15
-cmp eax, 16
-je q16
-cmp eax, 17
-je q17
-cmp eax, 18
-je q18
-cmp eax, 19
-je q19
-cmp eax, 20
-je q20
-cmp eax, 21
-je q21
-cmp eax, 22
-je q22
-cmp eax, 23
-je q23
-cmp eax, 24
-je q24
-
-
-q1:
-; printing the question
-
-mWrite<'Our country is spiritual country, theirs . . . . . . religious.', 0dh, 0ah>
-mWrite<'A. is', 0dh, 0ah>
-mWrite<'B. are', 0dh, 0ah>
-mWrite<'C. also',0dh, 0ah>
-mWrite<'D. have',0dh,0ah>
-
-
-; mov the answer option in eax
-mov eax, 'A'
-
-jmp MCQEND
-
-q2:
-mWrite<'... he does is up to him', 0dh, 0ah>
-mWrite<'A. how', 0dh, 0ah>
-mWrite<'B. why', 0dh, 0ah>
-mWrite<'C. what',0dh, 0ah>
-mWrite<'D. which',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-
-q3:
-mWrite<'The news ... the general has been captured is true', 0dh, 0ah>
-mWrite<'A. that ', 0dh, 0ah>
-mWrite<'B. how ', 0dh, 0ah>
-mWrite<'C. what ',0dh, 0ah>
-mWrite<'D. which ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-q4:
-mWrite<'Could you talk ...', 0dh, 0ah>
-mWrite<'A. quitelier ', 0dh, 0ah>
-mWrite<'B. more quietly', 0dh, 0ah>
-mWrite<'C. quitely',0dh, 0ah>
-mWrite<'D. none',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-q5:
-mWrite<'Can you drive any ...', 0dh, 0ah>
-mWrite<'A. fast ', 0dh, 0ah>
-mWrite<'B. fastest ', 0dh, 0ah>
-mWrite<'C. faster ',0dh, 0ah>
-mWrite<'D. none ',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-q6:
-mWrite<'Your accent is the ... in class', 0dh, 0ah>
-mWrite<'A. worst ', 0dh, 0ah>
-mWrite<'B. worse ', 0dh, 0ah>
-mWrite<'C. worster',0dh, 0ah>
-mWrite<'D. worsetest',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-q7:
-mWrite<'Find out from ... when she will be back', 0dh, 0ah>
-mWrite<'A. her', 0dh, 0ah>
-mWrite<'B. she', 0dh, 0ah>
-mWrite<'C. hers',0dh, 0ah>
-mWrite<'D. herself',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-q8:
-mWrite<'If you can not find your book, you can borrow...', 0dh, 0ah>
-mWrite<'A. mine ', 0dh, 0ah>
-mWrite<'B. me ', 0dh, 0ah>
-mWrite<'C. myself ',0dh, 0ah>
-mWrite<'D. my ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-q9:
-mWrite<'The little boy tied his shoelaces...', 0dh, 0ah>
-mWrite<'A. himself', 0dh, 0ah>
-mWrite<'B. him ', 0dh, 0ah>
-mWrite<'C. his',0dh, 0ah>
-mWrite<'D. he',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-q10:
-mWrite<' Could you turn ... the TV? The soap opera is about to start.', 0dh, 0ah>
-mWrite<'A. on', 0dh, 0ah>
-mWrite<'B. off', 0dh, 0ah>
-mWrite<'C. out',0dh, 0ah>
-mWrite<'D. back',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-
-q11:
-mWrite<'There was nothing good on TV so I turned it ... and went to bed.', 0dh, 0ah>
-mWrite<'A. in ', 0dh, 0ah>
-mWrite<'B. up ', 0dh, 0ah>
-mWrite<'C. off ',0dh, 0ah>
-mWrite<'D. down ',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-
-
-
-
-q12:
-mWrite<' I´ve been looking ... my car keys for half an hour. Have you seen them anywhere?', 0dh, 0ah>
-mWrite<'A. at ', 0dh, 0ah>
-mWrite<'B. up', 0dh, 0ah>
-mWrite<'C. for ',0dh, 0ah>
-mWrite<'D. after ',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-
-
-
-
-q13:
-mWrite<'What is the adverb in the sentence? Peter neatly wrote a shopping list.', 0dh, 0ah>
-mWrite<'A. neatly', 0dh, 0ah>
-mWrite<'B. wrote ', 0dh, 0ah>
-mWrite<'C. shopping',0dh, 0ah>
-mWrite<'D. list ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-
-
-q14:
-mWrite<'What is the adverb in the sentence? The students nervously did their test.', 0dh, 0ah>
-mWrite<'A. students', 0dh, 0ah>
-mWrite<'B. nervously ', 0dh, 0ah>
-mWrite<'C. their ',0dh, 0ah>
-mWrite<'D. test ',0dh,0ah>
-mov eax, 'B'
-jmp MCQEND
-
-
-
-
-q15:
-mWrite<'Which adverb best completes the sentence? She ... put the baby on the bed.', 0dh, 0ah>
-mWrite<'A. quick ', 0dh, 0ah>
-mWrite<'B. happyful ', 0dh, 0ah>
-mWrite<'C. carefully ',0dh, 0ah>
-mWrite<'D. did ',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-
-
-
-q16:
-mWrite<'The local team scored three goals ... the first half of the match.', 0dh, 0ah>
-mWrite<'A. at ', 0dh, 0ah>
-mWrite<'B. for', 0dh, 0ah>
-mWrite<'C. in ',0dh, 0ah>
-mWrite<'D. on ',0dh,0ah>
-mov eax, 'C'
-jmp MCQEND
-
-
-
-q17:
-mWrite<'The island is so small that there are only five houses ... it.', 0dh, 0ah>
-mWrite<'A. on ', 0dh, 0ah>
-mWrite<'B. in ', 0dh, 0ah>
-mWrite<'C. over ',0dh, 0ah>
-mWrite<'D. out ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-
-
-
-q18:
-mWrite<'Many species of insects were wiped ... when the jungle was cleared', 0dh, 0ah>
-mWrite<'A. of', 0dh, 0ah>
-mWrite<'B. away ', 0dh, 0ah>
-mWrite<'C. off ',0dh, 0ah>
-mWrite<'D. out ',0dh,0ah>
-mov eax, 'D'
-jmp MCQEND
-
-
-q19:
-mWrite<'..., you have get a chance, you might as well make full use of it.', 0dh, 0ah>
-mWrite<'A. As soon as', 0dh, 0ah>
-mWrite<'B. Now that ', 0dh, 0ah>
-mWrite<'C. Although ',0dh, 0ah>
-mWrite<'D. After ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-
-
-
-q20:
-mWrite<'She has not spoken to us ... we had the argument.', 0dh, 0ah>
-mWrite<'A. since ', 0dh, 0ah>
-mWrite<'B. while ', 0dh, 0ah>
-mWrite<'C. so ',0dh, 0ah>
-mWrite<'D. as ',0dh,0ah>
-mov eax, 'A'
-jmp MCQEND
-
-
-
-q21:
-mWrite<'... you refuse to pay the ransom, the kidnappers might hurt the child', 0dh, 0ah>
-mWrite<'A. Or ', 0dh, 0ah>
-mWrite<'B. If ', 0dh, 0ah>
-mWrite<'C. Lest',0dh, 0ah>
-mWrite<'D. Unless',0dh,0ah>
-mov eax, 'B'
-jmp MCQEND
-
-
-q22:
-mWrite<"...!Now don't show me your face again.", 0dh, 0ah>
-mWrite<'A. Hark ', 0dh, 0ah>
-mWrite<'B. Sorry ', 0dh, 0ah>
-mWrite<'C. Listen',0dh, 0ah>
-mWrite<'D. Out ',0dh,0ah>
-mov eax, 'D'
-jmp MCQEND
-
-
-
-q23:
-mWrite<'...!my lord, I feel honoured to welcome you to my humble abode.', 0dh, 0ah>
-mWrite<'A. Hey', 0dh, 0ah>
-mWrite<'B. Hail', 0dh, 0ah>
-mWrite<'C. Ahoy',0dh, 0ah>
-mWrite<'D. Adieu',0dh,0ah>
-mov eax, 'B'
-jmp MCQEND
-
-
-
-
-q24:
-mWrite<'...!Let me see if I can get something to pull it out.', 0dh, 0ah>
-mWrite<'A. Ha', 0dh, 0ah>
-mWrite<'B. O', 0dh, 0ah>
-mWrite<'C. Hey',0dh, 0ah>
-mWrite<'D. Hold on',0dh,0ah>
-mov eax, 'D'
-jmp MCQEND
-
-
-
-MCQEND:
-
-ret
-MCQs ENDp
 
 
 
