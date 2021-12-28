@@ -6,88 +6,129 @@ answer_max_length = 80
 answer byte answer_max_length dup(?)
 answerlength byte ?
 score byte 0
+randomArray byte 15 dup(0)
 
 .code
 
-scoreSave PROC
-BUFFER_SIZE = 501
+randomArrayGenerator PROC
+
 .data
-;buffer BYTE BUFFER_SIZE DUP(0)
-;buffer byte 'HighScore: ',?,0
-
-buffer byte 50 dup(0)
-
-filename     BYTE 50 dup(?)
-fileHandle   HANDLE ?
-stringLength DWORD ?
-bytesWritten DWORD ?
-str1 BYTE "Cannot create file",0dh,0ah,0
-str2 BYTE "Bytes written to file [output.txt]: ",0
-str3 BYTE "Enter up to 500 characters and press "
-     BYTE "[Enter]: ",0dh,0ah,0
+count byte 0
 
 .code
-mWrite<"Enter name: ">
+push ecx
+push eax
+push ebx
+push esi
+
+mov ecx, 15
+mov ebx, 0
+mov eax, 0
+mov esi, edx
+
+l1:
+	inc ebx
+	push ecx
+	push edx
+	
+	do:
+		mov count, 0
+		mov eax, 30
+		call Randomize
+		call RandomRange
+		add eax, 1
+		mov ecx, ebx
+		mov edx, esi
+		l2:
+		cmp al, [edx]
+		jne finish
+		add count, 1
+		
+
+		
+		finish:
+		inc edx
+		loop l2
+		
+	cmp count, 0
+	jne do
+	
+	pop edx
+	mov [edx],al
+	pop ecx
+	inc edx
+loop l1
+
+pop esi
+pop ebx
+pop eax
+pop ecx
+ret
+randomArrayGenerator ENDP
+
+saveScore PROC
+.data
+buffer BYTE 'Score: ',0,0,0dh,0ah
+bufSize DWORD ($-buffer)
+errMsg BYTE "Cannot open file",0dh,0ah,0
+filename     BYTE 50 dup (?)
+fileHandle   HANDLE ?			; handle to output file
+bytesWritten DWORD ?    			; number of bytes written
+
+.code
+mWrite <0dh,0ah,'-->> Please enter your name: '>
 mov edx, offset filename
-mov ecx, 50
+mov ecx, 50 ; maximum str length
 call readstring
 
 mov filename[eax], '.'
-mov filename[eax+1], 't'
-mov filename[eax+2], 'x'
-mov filename[eax+3], 't'
-mov filename[eax+4], 0
+mov filename[eax + 1], 't'
+mov filename[eax + 2], 'x'
+mov filename[eax + 3], 't'
+mov filename[eax + 4], 0
 
 
-; Create a new text file.
-	mov	edx,OFFSET filename
-	call	CreateOutputFile
-	mov	fileHandle,eax
+cmp ebx, 10
+je append10
+add bl, 48
+mov buffer[8], bl
+jmp appendnum
 
-; Check for errors.
-	cmp	eax, INVALID_HANDLE_VALUE	; error found?
-	jne	file_ok					; no: skip
-	mov	edx,OFFSET str1			; display error
-	call	WriteString
-	jmp	quit
-file_ok:
 
-Comment !
-; Ask the user to input a string.
-	mov	edx,OFFSET str3		; "Enter up to ...."
-	call	WriteString
-	mov	ecx,BUFFER_SIZE		; Input a string
-	mov	edx,OFFSET buffer
+append10:
+mov buffer[8], 49
+mov buffer[9], 48
 
-	call	ReadString
-	mov	stringLength,eax		; counts chars entered
 
-	!
 
-	mov buffer[0], bl
-; Write the buffer to the output file.
-	mov	eax,fileHandle
-	mov	edx,OFFSET buffer
-	mov	ecx, buffer_SIze
-	call	WriteToFile
-	mov	bytesWritten,eax		; save return value
-	call	CloseFile
-	
-	
-; Display the return value.
-	mWrite<"Bytes written to file ">
-	mov edx, offset filename
-	mWrite<": ">
-	call	WriteString
-	mov	eax,bytesWritten
-	call	WriteDec
-	call	Crlf
 
-	
-	
-quit:
+appendnum:
+	INVOKE CreateFile,
+	  ADDR filename, GENERIC_WRITE, DO_NOT_SHARE, NULL,
+	  OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0
+
+	mov fileHandle,eax			; save file handle
+	.IF eax == INVALID_HANDLE_VALUE
+	  mov  edx,OFFSET errMsg		; Display error message
+	  call WriteString
+	  jmp  QuitNow
+	.ENDIF
+
+	; Move the file pointer to the end of the file
+	INVOKE SetFilePointer,
+	  fileHandle,0,0,FILE_END
+
+	; Append text to the file
+	INVOKE WriteFile,
+	    fileHandle, ADDR buffer, bufSize,
+	    ADDR bytesWritten, 0
+
+	INVOKE CloseHandle, fileHandle
+
+QuitNow:
+
 ret
-scoreSave ENDP
+saveScore ENDP
 
 main PROC
 
@@ -95,65 +136,30 @@ main PROC
 
 start:
 call clear_screen
-mov score,0
-mov ecx, 10
-mov ebx, 0
-mov eax, 0
+mWrite<'-->> Which questions do you want to practice?',0dh,0ah>
+mWrite<'1. Fill in the blanks.',0dh,0ah>
+mWrite<'2. Multiple Choice Questions.',0dh,0ah>
 
-questioning:
-inc ebx
-push ebx
-mWrite<"Q. ">
-mov eax, ebx
-call FIB
+call readint
 
-push ecx
-mov edx, offset answer
-mov ecx, answer_max_length
-mWrite<"Your Answer: ",0>
-call readstring
-
-
-mov answerlength, al
-add answerlength, 1
+.if al == 1
+call FIBTEST
+.else
+call MCQTEST
+.endif
 
 
 
-mov esi, offset answer
-movzx eax, answerlength
-
-
-call stringcmp
-
-cmp eax, 1
-jne wrong
-
-inc score
-mWrite<"Correct!",0dh,0ah>
-call readchar
-jmp next
-
-
-wrong:
-mwrite<"Wrong!", 0dh, 0ah>
-call readchar
-
-next:
-pop ecx
-call clear_screen
-
-
-; loop
-pop ebx
-dec ecx
-cmp ecx, 0
-jne questioning
 
 
 quit:
 mWrite<"Your Score: ">
 movzx eax, score
 call writeint
+
+mov ebx, 0
+mov bl, score
+call saveScore
 
 mWrite<0dh,0ah,"Play Again? (Y/N): ">
 call readchar
@@ -266,6 +272,75 @@ ret
 FIB ENDP
 
 
+FIBTEST PROC
+call clear_screen
+mov score,0
+mov ecx, 10
+mov ebx, 0
+mov eax, 0
+
+questioning:
+inc ebx
+push ebx
+mWrite<"Q. ">
+mov eax, ebx
+call FIB
+
+push ecx
+mov edx, offset answer
+mov ecx, answer_max_length
+mWrite<"Your Answer: ",0>
+call readstring
+
+
+mov answerlength, al
+add answerlength, 1
+
+
+
+mov esi, offset answer
+movzx eax, answerlength
+
+
+call stringcmp
+
+cmp eax, 1
+jne wrong
+
+inc score
+mWrite<"Correct!",0dh,0ah>
+call readchar
+jmp next
+
+
+wrong:
+mwrite<"Wrong!", 0dh, 0ah>
+call readchar
+
+next:
+pop ecx
+call clear_screen
+
+
+; loop
+pop ebx
+dec ecx
+cmp ecx, 0
+jne questioning
+
+ret
+FIBTEST ENDP
+
+
+
+MCQTEST PROC
+
+
+
+ret 
+MCQTEST ENDP
+
+
 MCQs PROC
 cmp eax, 1
 je q1
@@ -324,7 +399,9 @@ mov ecx, eax
 
 check:
 	mov al, [esi]
+	and al, 11011111b
 	mov bl, [edi]
+	and bl, 11011111b
 	cmp al, bl
 	jne notsame
 	inc esi
