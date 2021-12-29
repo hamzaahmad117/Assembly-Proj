@@ -7,6 +7,7 @@ answer byte answer_max_length dup(?)
 answerlength byte ?
 score byte 0
 randomArray byte 40 dup(0)
+blue = 1
 
 .code
 MCQs PROC
@@ -679,7 +680,7 @@ jmp fibEnd
 
 
 q40:
-mWrite<"...!you performed great">
+mWrite<"...! You performed great">
 mov edi,offset a40
 mov ebx,lengthof a40
 jmp fibEnd
@@ -689,6 +690,77 @@ mWrite<0dh, 0ah>
 ret
 FIB ENDP
 
+viewScores PROC
+.data
+READ_BUFFER_SIZE = 5000
+readbuffer BYTE READ_BUFFER_SIZE DUP(?)
+readfilename    BYTE 80 DUP(0)
+readfileHandle  HANDLE ?
+
+.code
+
+; Let user input a filename.
+	mWrite "Enter your name: "
+	mov	edx,OFFSET readfilename
+	mov	ecx,SIZEOF readfilename
+	call	ReadString
+
+mov readfilename[eax], '.'
+mov readfilename[eax + 1], 't'
+mov readfilename[eax + 2], 'x'
+mov readfilename[eax + 3], 't'
+mov filename[eax + 4], 0
+
+
+; Open the file for input.
+	mov	edx,OFFSET readfilename
+	call	OpenInputFile
+	mov	readfileHandle,eax
+
+; Check for errors.
+	cmp	eax,INVALID_HANDLE_VALUE		; error opening file?
+	jne	file_ok					; no: skip
+	mWrite <"User does not exist!",0dh,0ah>
+	jmp	quit						; and quit
+file_ok:
+
+; Read the file into a buffer.
+	mov	edx,OFFSET readbuffer
+	mov	ecx, 70
+	call	ReadFromFile
+	jnc	check_buffer_size			; error reading?
+	mWrite "Error reading file. "		; yes: show error message
+	call	WriteWindowsMsg
+	jmp	close_file
+	
+check_buffer_size:
+	cmp	eax,READ_BUFFER_SIZE			; buffer large enough?
+	jb	buf_size_ok				; yes
+	mWrite <"Error: Buffer too small for the file",0dh,0ah>
+	jmp	quit						; and quit
+	
+buf_size_ok:	
+	;mov	readbuffer[eax],0		; insert null terminator
+	;mWrite "File size: "
+	;call	WriteDec			; display file size
+	;call	Crlf
+
+; Display the buffer.
+	mov eax, blue + (black * 16)
+	call settextcolor
+	mWrite <0dh, 0ah,"Following are your scores:",0dh,0ah>
+	mov eax, white + (black * 16)
+	call settextcolor
+	mov	edx,OFFSET readbuffer	; display the buffer
+	call	WriteString
+
+close_file:
+	mov	eax,readfileHandle
+	call	CloseFile
+
+quit:
+ret
+viewScores ENDP
 
 ; ---------------------------------------------------------------------------------;
 ; mov offset of the randomArray in edx
@@ -730,8 +802,6 @@ l1:
 		jne finish
 		add count, 1
 		
-
-		
 		finish:
 		inc edx
 		loop l2
@@ -753,8 +823,9 @@ randomArrayGenerator ENDP
 
 saveScore PROC
 .data
-buffer BYTE 'Score: ',0,0,0dh,0ah
-bufSize DWORD ($-buffer)
+buffer BYTE 'Score: ',?,?,0dh,0ah
+
+bufSize = ($-buffer)
 errMsg BYTE "Cannot open file",0dh,0ah,0
 filename     BYTE 50 dup (?)
 fileHandle   HANDLE ?			; handle to output file
@@ -776,13 +847,14 @@ mov filename[eax + 4], 0
 cmp ebx, 10
 je append10
 add bl, 48
-mov buffer[8], bl
+mov buffer[7], 32
+mov buffer[7 + 1], bl
 jmp appendnum
 
 
 append10:
-mov buffer[8], 49
-mov buffer[9], 48
+mov buffer[7+ 1], 49
+mov buffer[7], 48
 
 
 appendnum:
@@ -819,18 +891,78 @@ main PROC
 
 start:
 call clear_screen
-mWrite<'-->> Which questions do you want to practice?',0dh,0ah>
-mWrite<'1. Fill in the blanks.',0dh,0ah>
-mWrite<'2. Multiple Choice Questions.',0dh,0ah>
-mWrite<'3. View Scores.',0dh,0ah>
-mWrite<'4. Quit Game.',0dh, 0ah>
-mWrite<'Your Choice: '>
-call readint
 
+mov eax, blue + (black * 16)
+call settextcolor
+call crlf
+mWrite<"                                ____                                          ",0dh,0ah>
+mWrite<"                               / ___|_ __ __ _ _ __ ___  _ __ ___   __ _ _ __ ",0dh,0ah>
+mWrite<"                              | |  _| '__/ _` | '_ ` _ \| '_ ` _ \ / _` | '__|",0dh,0ah>
+mWrite<"                              | |_| | | | (_| | | | | | | | | | | | (_| | |   ",0dh,0ah>
+mWrite<'                               \____|_|  \__,_|_| |_| |_|_| |_| |_|\__,_|_|   ',0dh,0ah>
+mWrite<"                                _____          _                 ",0dh,0ah>
+mWrite<"                               |_   _| __ __ _(_)_ __   ___ _ __ ",0dh,0ah>
+mWrite<"                                 | || '__/ _` | | '_ \ / _ \ '__|",0dh,0ah>
+mWrite<"                                 | || | | (_| | | | | |  __/ |   ",0dh,0ah>
+mWrite<"                                 |_||_|  \__,_|_|_| |_|\___|_|",0dh,0ah>
+mov eax, white + (black * 16)
+call settextcolor
+mov dh, 13
+mov dl, 26
+call gotoxy
+mWrite<'     ------->>   Menu:  <<------',0dh,0ah>
+add dh, 2
+call gotoxy
+mWrite<'     1. Fill in the blanks.',0dh,0ah>
+inc dh
+call gotoxy
+mWrite<'     2. Multiple Choice Questions.',0dh,0ah>
+inc dh
+call gotoxy
+mWrite<'     3. View Scores.',0dh,0ah>
+inc dh
+call gotoxy
+mWrite<'     4. Quit Game.',0dh, 0ah>
+add dh,2
+call gotoxy
+mWrite<'     Your Choice: '>
+call readint
+call clrscr
 .if al == 1
+mov eax, red + (black * 16)
+call settextcolor
+mWrite<'-->  Starting '>
+
+mov ecx, 5
+ani:
+mov eax, 700
+call delay
+mWrite<'. '>
+loop ani
+
+mov eax, white + (black * 16)
+call settextcolor
 call FIBTEST
 .elseif al == 2
+mov eax, red + (black * 16)
+call settextcolor
+mWrite<'-->  Starting '>
+
+mov ecx, 5
+ani1:
+mov eax, 700
+call delay
+mWrite<'. '>
+loop ani1
+
+mov eax, white + (black * 16)
+call settextcolor
 call MCQTEST
+
+.elseif al == 3
+call viewScores
+call readint
+jmp start
 .else
 jmp closeProgram
 .endif
@@ -854,6 +986,21 @@ jmp start
 
 
 closeProgram:
+call crlf
+call crlf
+call crlf
+mov eax, blue + (black * 16)
+call setTextcolor
+mWrite<"                                   ____                         ___                   _ ",0dh,0ah>
+mWrite<"                                  / ___| __ _ _ __ ___   ___   / _ \__   _____ _ __  | |",0dh,0ah>
+mWrite<"                                 | |  _ / _` | '_ ` _ \ / _ \ | | | \ \ / / _ \ '__| | |",0dh,0ah>
+mWrite<"                                 | |_| | (_| | | | | | |  __/ | |_| |\ V /  __/ |    |_|",0dh,0ah>
+mWrite<"                                  \____|\__,_|_| |_| |_|\___|  \___/  \_/ \___|_|    (_)",0dh,0ah>
+mov eax, white + (black * 16)
+call setTextcolor
+call crlf
+call crlf
+call crlf
 exit
 main ENDP
 
@@ -908,7 +1055,7 @@ jne wrong
 inc score
 mov eax, green + (black * 16)
 call settextcolor
-mWrite<"Correct!",0dh,0ah>
+mWrite<"--> Correct!",0dh,0ah>
 mov eax, white + (black * 16)
 call settextcolor
 call readchar
@@ -918,10 +1065,10 @@ jmp next
 wrong:
 mov eax, red + (black * 16)
 call settextcolor
-mwrite<"Wrong!", 0dh, 0ah>
+mwrite<"--> Wrong!", 0dh, 0ah>
+mWrite<'--> Correct Answer: '>
 mov eax, white + (black * 16)
 call settextcolor
-mWrite<'Correct Answer: '>
 mov edx, edi
 call writestring
 call readchar
@@ -985,7 +1132,7 @@ cmp al, bl
 jne wrong
 mov eax, green + (black * 16)
 call settextcolor
-mWrite<'Correct!',0dh, 0ah>
+mWrite<'--> Correct!',0dh, 0ah>
 call readint
 mov eax, white + (black * 16)
 call settextcolor
@@ -995,8 +1142,8 @@ jmp next
 wrong:
 mov eax, red + (black * 16)
 call settextcolor
-mWrite<'Wrong!',0dh, 0ah>
-mWrite<'The correct option was '>
+mWrite<'--> Wrong!',0dh, 0ah>
+mWrite<'--> The correct option was '>
 mov eax, ebx
 call writechar
 mWrite<'.',0dh, 0ah>
@@ -1051,13 +1198,14 @@ stringcmp ENDP
 
 clear_screen PROC uses ecx
 .data
-blanks byte 1000 dup(" ")
+blanks byte 1000 dup(" "),0
 
 .code
+;call clrScr
 mov dh,0
 mov dl,0
 call gotoxy
-mov ecx, 40
+mov ecx, 30
 
 clearinglines:
 mov edx, offset blanks
