@@ -885,14 +885,21 @@ QuitNow:
 ret
 saveScore ENDP
 
+
+
 main PROC
 
+.data
+cyan = 3
+yellow = 14
 
 
+
+.code
 start:
 call clear_screen
 
-mov eax, blue + (black * 16)
+mov eax, yellow + (black * 16)
 call settextcolor
 call crlf
 mWrite<"                                ____                                          ",0dh,0ah>
@@ -989,7 +996,7 @@ closeProgram:
 call crlf
 call crlf
 call crlf
-mov eax, blue + (black * 16)
+mov eax, cyan + (black * 16)
 call setTextcolor
 mWrite<"                                   ____                         ___                   _ ",0dh,0ah>
 mWrite<"                                  / ___| __ _ _ __ ___   ___   / _ \__   _____ _ __  | |",0dh,0ah>
@@ -1221,3 +1228,4 @@ ret
 clear_screen ENDP
 
 END main
+
